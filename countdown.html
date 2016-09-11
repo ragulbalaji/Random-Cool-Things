@@ -1,0 +1,80 @@
+<html>
+<!--
+	   ______                  __      __
+	  / ____/___  __  ______  / /_____/ /___ _      ______
+	 / /   / __ \/ / / / __ \/ __/ __  / __ \ | /| / / __ \
+	/ /___/ /_/ / /_/ / / / / /_/ /_/ / /_/ / |/ |/ / / / /
+	\____/\____/\__,_/_/ /_/\__/\__,_/\____/|__/|__/_/ /_/
+	Countdown Page! So that I get my ass to work.
+	Ragul Balaji (C) 2016. All Rights Reserved
+-->
+
+<head>
+	<title>RB Countdown</title>
+	<link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
+	<style>
+		* {
+			font-family: 'Anonymous Pro', monospace;
+		}
+
+		body {
+			background: darkslateblue no-repeat center center fixed;
+			background-size: cover;
+			color: white;
+			text-shadow: black 2px 2px;
+		}
+
+		#evttitle {
+			padding-top: 5vh;
+		}
+
+		h1 {
+			font-size: 6vw;
+		}
+
+		h2 {
+			font-size: 3vw;
+		}
+
+		#holder {
+			position: absolute;
+			top: 25vh;
+			left: 0;
+			bottom: 0;
+			right: 0;
+		}
+	</style>
+</head>
+
+<body>
+	<center id="holder">
+		<h1 id="evttitle"></h1>
+		<h2 id="time"></h2>
+	</center>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js"></script>
+<script>
+	var myevt = {
+		name: "Start of the A levels 👻",
+		datetime: new Date(2016, 11 - 1, 7), // Y, M(0-indexed), D, h, m, s, ms
+		clkspd: 500, //ms
+		bgsrc: "https://i.imgur.com/vlUNPNq.png",
+		runvar: -420
+	}
+
+	function update() {
+		var timeleft = countdown(new Date(), myevt.datetime, countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS).toString();
+		elem("time").innerHTML = timeleft;
+		if (myevt.runvar == -420) myevt.runvar = setInterval(update, myevt.clkspd)
+	}
+
+	function elem(id) {
+		return document.getElementById(id)
+	}
+
+	elem("evttitle").innerHTML = myevt.name;
+	document.body.style.backgroundImage = "url(" + myevt.bgsrc + ")"
+	update();
+</script>
+
+</html>
