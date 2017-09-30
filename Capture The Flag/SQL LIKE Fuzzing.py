@@ -1,3 +1,6 @@
+# BACKDOORCTF2017 THE-WALL 100pts
+# CTF{type_juggling_and_blind_sql_are_worth_a_fun_240610708}
+
 import requests
 
 fuzzd5 = ""

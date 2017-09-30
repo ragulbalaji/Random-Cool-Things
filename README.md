@@ -1,5 +1,4 @@
 # Random-Cool-Things
-Some interesting stuff that has no association to one another. Little Hacks :P
+Some interesting stuff that has no association to one another. A collection of random little debris 🤣
 
-## Wisdom.php
-A small script that speaks Words of Wisdom inspired by the great Deepak Chopra. Best heard with 'Daniel' as your narration voice.
+Current Randomness ranges from CTF Code Scraps to Random Text-to-Speech on AI Generated Tweets
