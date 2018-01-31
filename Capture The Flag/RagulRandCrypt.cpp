@@ -22,30 +22,30 @@ using namespace std;
 // The following functions define a CUSTOMISED portable implementation of rand and srand
 static unsigned long int nextnum = 1;
 
-void pSRAND(unsigned int seed){
+void pSRAND(unsigned long long seed){
 	nextnum = seed;
 }
 
 int pRAND(void){ // RAND_MAX assumed to be 32767 in std implementation
 	nextnum = nextnum * 1103515245 + 12345;
-	return (unsigned int)(nextnum/65536) % ENT; 
+	return (unsigned int)(nextnum/65536) % ENT;
 }
 
 // Main Cipher
 int main(int argc, char* argv[]){
 	string key;
 	char mode;
-	
+
 	if(argc < 3) return 0; // Safe Death
 
 	key = argv[1];
 
-	unsigned int seed = 31337;
-	unsigned int modu = 4000000000;
+	unsigned long long seed = 31337;
+	unsigned long long modu = 4000000000;
 
 	for(unsigned int i = 0; i < key.length(); i++){
 		if(ENT == 32767 && i >= key.length()/2) ENT = seed % 2147483648;
-		seed = seed * int(key[i]);
+		seed = (seed + i) * int(key[i]);
 		seed = seed % modu;
 		//cout << seed << "\n";
 	}
