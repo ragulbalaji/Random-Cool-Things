@@ -22,9 +22,9 @@ void pSRAND(unsigned int seed){
 	nextnum = seed;
 }
 
-int pRAND(void){ // RAND_MAX assumed to be 32767 
+int pRAND(void){ // RAND_MAX assumed to be 32767 but increased to 2^32
 	nextnum = nextnum * 1103515245 + 12345;
-	return (unsigned int)(nextnum/65536) % 32768; 
+	return (unsigned int)(nextnum/65536) % 2147483648; 
 }
 
 // Main Cipher
@@ -32,6 +32,8 @@ int main(int argc, char* argv[]){
 	string key;
 	char mode;
 	
+	if(argc < 3) return 0; // Safe Death
+
 	key = argv[1];
 
 	unsigned int seed = 42;
@@ -52,7 +54,6 @@ int main(int argc, char* argv[]){
 			printf("%x ", num);
 		}
 	}else if(mode == '-'){
-		char c;
 		unsigned int num;
 		while (scanf("%x ", &num) != EOF) {
 			num = num ^ pRAND();
