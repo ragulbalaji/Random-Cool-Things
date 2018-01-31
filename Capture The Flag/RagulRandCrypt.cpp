@@ -11,21 +11,22 @@
 #include <stdio.h>
 #include <iostream>
 
-#define ENT 32767 // Normal
+//#define ENT 32767 // Normal
 //#define ENT 2147483648 // EXTRA UNICODE SECURE
+unsigned long int ENT = 32767; //Dynamic Mode
 
 using namespace std;
 
 // http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf
 // ISO/IEC 9899:TC3 Committee Draft — Septermber 7, 2007 WG14/N1256
-// The following functions define a portable implementation of rand and srand
+// The following functions define a CUSTOMISED portable implementation of rand and srand
 static unsigned long int nextnum = 1;
 
 void pSRAND(unsigned int seed){
 	nextnum = seed;
 }
 
-int pRAND(void){ // RAND_MAX assumed to be 32767 but increased to 2^32
+int pRAND(void){ // RAND_MAX assumed to be 32767 in std implementation
 	nextnum = nextnum * 1103515245 + 12345;
 	return (unsigned int)(nextnum/65536) % ENT; 
 }
@@ -43,6 +44,7 @@ int main(int argc, char* argv[]){
 	unsigned int modu = 4000000000;
 
 	for(unsigned int i = 0; i < key.length(); i++){
+		if(ENT == 32767 && i >= key.length()/2) ENT = seed % 2147483648;
 		seed = seed * int(key[i]);
 		seed = seed % modu;
 		//cout << seed << "\n";
