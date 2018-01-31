@@ -1,6 +1,6 @@
 /* Ragul's Random Number Stream Cipher (C) 2018
  * This is cool but never roll ur own crypto kids...
-
+ *
  * Usage Examples:
  * ---------------
  * Compile g++ RagulRandCrypt.cpp -o ragulrandcrypt
