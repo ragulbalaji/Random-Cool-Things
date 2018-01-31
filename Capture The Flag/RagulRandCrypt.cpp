@@ -48,14 +48,14 @@ int main(int argc, char* argv[]){
 		char c;
 		unsigned int num;
 		while (cin.get(c)) {
-			num = c ^ (pRAND() % 64);
+			num = c ^ pRAND();
 			printf("%x ", num);
 		}
 	}else if(mode == '-'){
 		char c;
 		unsigned int num;
 		while (scanf("%x ", &num) != EOF) {
-			num = num ^ (pRAND() % 64);
+			num = num ^ pRAND();
 			cout << char(num);
 		}
 	}
