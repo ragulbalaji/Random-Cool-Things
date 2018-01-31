@@ -11,6 +11,9 @@
 #include <stdio.h>
 #include <iostream>
 
+#define ENT 32767 // Normal
+//#define ENT 2147483648 // EXTRA UNICODE SECURE
+
 using namespace std;
 
 // http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf
@@ -24,7 +27,7 @@ void pSRAND(unsigned int seed){
 
 int pRAND(void){ // RAND_MAX assumed to be 32767 but increased to 2^32
 	nextnum = nextnum * 1103515245 + 12345;
-	return (unsigned int)(nextnum/65536) % 2147483648; 
+	return (unsigned int)(nextnum/65536) % ENT; 
 }
 
 // Main Cipher
@@ -36,7 +39,7 @@ int main(int argc, char* argv[]){
 
 	key = argv[1];
 
-	unsigned int seed = 42;
+	unsigned int seed = 31337;
 	unsigned int modu = 4000000000;
 
 	for(unsigned int i = 0; i < key.length(); i++){
