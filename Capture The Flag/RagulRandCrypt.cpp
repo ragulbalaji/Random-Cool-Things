@@ -34,10 +34,10 @@ int main(int argc, char* argv[]){
 	
 	key = argv[1];
 
-	int seed = 42;
-	int modu = 999999;
+	unsigned int seed = 42;
+	unsigned int modu = 4000000000;
 
-	for(int i = 0; i < key.length(); i++){
+	for(unsigned int i = 0; i < key.length(); i++){
 		seed = seed * int(key[i]);
 		seed = seed % modu;
 		//cout << seed << "\n";
@@ -46,14 +46,14 @@ int main(int argc, char* argv[]){
 	mode = *argv[2];
 	if(mode == '+'){
 		char c;
-		int num;
+		unsigned int num;
 		while (cin.get(c)) {
 			num = c ^ (pRAND() % 64);
 			printf("%x ", num);
 		}
 	}else if(mode == '-'){
 		char c;
-		int num;
+		unsigned int num;
 		while (scanf("%x ", &num) != EOF) {
 			num = num ^ (pRAND() % 64);
 			cout << char(num);
