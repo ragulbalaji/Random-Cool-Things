@@ -13,14 +13,14 @@
 
 //#define ENT 32767 // Normal
 //#define ENT 2147483648 // EXTRA UNICODE SECURE
-unsigned long int ENT = 32767; //Dynamic Mode
+unsigned long long ENT = 32767; //Dynamic Mode
 
 using namespace std;
 
 // http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf
 // ISO/IEC 9899:TC3 Committee Draft — Septermber 7, 2007 WG14/N1256
 // The following functions define a CUSTOMISED portable implementation of rand and srand
-static unsigned long int nextnum = 1;
+static unsigned long long nextnum = 1;
 
 void pSRAND(unsigned long long seed){
 	nextnum = seed;
@@ -40,15 +40,16 @@ int main(int argc, char* argv[]){
 
 	key = argv[1];
 
-	unsigned long long seed = 31337;
-	unsigned long long modu = 4000000000;
+	unsigned long long seed = 3133731337;
+	unsigned long long modu = 999999999999999999;
 
 	for(unsigned int i = 0; i < key.length(); i++){
 		if(ENT == 32767 && i >= key.length()/2) ENT = seed % 2147483648;
 		seed = (seed + i) * int(key[i]);
 		seed = seed % modu;
-		//cout << seed << "\n";
+		//cout << seed << " " << ENT << "\n";
 	}
+
 	pSRAND(seed);
 	mode = *argv[2];
 	if(mode == '+'){
