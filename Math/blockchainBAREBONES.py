@@ -1,7 +1,7 @@
 import random
 import hashlib
 
-challengelen = 2;
+challengelen = 2
 chain = []
 
 
