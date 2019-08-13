@@ -65,3 +65,21 @@ Comment out these ANNOYING lines in the install script
 # sudo easy_install pip
 ```
 then run `./install 2wd rplidar` again
+and you might run outta memory and swap *facepalms*
+```
+sudo apt install dphys-swapfile
+sudo dphys-swapfile swapoff
+sudo nano /etc/dphys-swapfile
+```
+add this line `CONF_SWAPSIZE=2048`
+```
+sudo /sbin/dphys-swapfile setup
+sudo dphys-swapfile swapon
+```
+
+Now run the install script again or you can go to the `~/linorobot_ws` workspace directly and:
+```
+catkin_make --pkg lino_msgs
+catkin_make
+```
+AHHH FINALLY CMAKE SHIZ IS DONE. *(hopefully for you too)*
