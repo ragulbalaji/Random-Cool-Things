@@ -1,9 +1,8 @@
-set_pin_assignment {CLK_24M} { LOCATION = K14; }		## 24MHZ
-set_pin_assignment {USR_BTN} { LOCATION = K16; }		## USER_KEY
+set_pin_assignment	{ CLK_24M }	{ LOCATION = K14; }
+set_pin_assignment	{ USR_BTN }	{ LOCATION = K16; }
 
-## RGB LINES
-set_pin_assignment {VGA_RGB[0]} { LOCATION = P15; }
-set_pin_assignment {VGA_RGB[1]} { LOCATION = P16; }
-set_pin_assignment {VGA_RGB[2]} { LOCATION = M14; }
-set_pin_assignment {HSYNC}   { LOCATION = L14; }
-set_pin_assignment {VSYNC}   { LOCATION = M16; }
+set_pin_assignment	{ VGA_RGB[0] }	{ LOCATION = P2; PULLTYPE = PULLDOWN; }
+set_pin_assignment	{ VGA_RGB[1] }	{ LOCATION = R2; PULLTYPE = PULLDOWN; }
+set_pin_assignment	{ VGA_RGB[2] }	{ LOCATION = N5; PULLTYPE = PULLDOWN; }
+set_pin_assignment	{ VSYNC }	{ LOCATION = T7; PULLTYPE = PULLUP; }
+set_pin_assignment	{ HSYNC }	{ LOCATION = P5; PULLTYPE = PULLUP; }
