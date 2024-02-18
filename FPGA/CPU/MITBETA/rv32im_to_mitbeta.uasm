@@ -1,0 +1,132 @@
+// Tested on https://computationstructures.org/tools/bsim_workbook.html
+.include "beta.uasm"
+
+// RV32 ASM ON BETA CHEESE METHOD
+// ragulbalaji <3 feb 2024
+
+// RV32IM -> BETA MACROS
+// reference https://www.cse.cuhk.edu.hk/~byu/CENG3420/2023Spring/doc/RV32-reference-1.pdf
+// reference https://msyksphinz-self.github.io/riscv-isadoc/html/rvi.html
+STACK_TOP = 0x7FFF
+zero = r31 // always zero reg
+rtmp = r26 // my temp reg for cmps
+ra = lp    // retaddr for rv32 is lp for beta
+a0 = r0
+a1 = r1
+a2 = r2
+
+.macro RV32OP_li(rd, imm)            CMOVE(imm, rd)
+.macro RV32OP_sw(rs2, imm, rs1)      ST(rs2, imm, rs1)
+.macro RV32OP_lui(rd, imm)           CMOVE(imm, rd)      SHLC(rd, 12, rd)
+.macro RV32OP_addi(rd, rs1, imm)     ADDC(rs1, imm, rd)
+.macro RV32OP_bne(rs1, rs2, offset)  SUB(rs1, rs2, rtmp)  BNE(rtmp, offset)
+.macro RV32OP_ret()                  RTN()
+.macro RV32OP_slli(rd, rs1, shamt)   SHLC(rs1, shamt, rd)
+.macro RV32OP_or(rd, rs1, rs2)       OR(rs1, rs2, rd)
+.macro RV32OP_call(label)            CALL(label)
+.macro RV32OP_lw(rd, offset, rs1)    LD(rs1, offset, rd)
+
+
+// RV32IM PROGRAM STARTS HERE
+
+.=0
+CMOVE(STACK_TOP, sp)
+CALL(main)
+HALT() 
+
+
+clearscreen_char_char:
+  RV32OP_slli(    a1, a1, 8)
+  RV32OP_or(      a0, a1, a0)
+  RV32OP_li(      a1, 1100)
+  RV32OP_lui(     a2, 1)
+  RV32OP_addi(    a2, a2, -1796)
+LBB0_1:
+  RV32OP_sw(      a0, -76, a1)
+  RV32OP_sw(      a0, -72, a1)
+  RV32OP_sw(      a0, -68, a1)
+  RV32OP_sw(      a0, -64, a1)
+  RV32OP_sw(      a0, -60, a1)
+  RV32OP_sw(      a0, -56, a1)
+  RV32OP_sw(      a0, -52, a1)
+  RV32OP_sw(      a0, -48, a1)
+  RV32OP_sw(      a0, -44, a1)
+  RV32OP_sw(      a0, -40, a1)
+  RV32OP_sw(      a0, -36, a1)
+  RV32OP_sw(      a0, -32, a1)
+  RV32OP_sw(      a0, -28, a1)
+  RV32OP_sw(      a0, -24, a1)
+  RV32OP_sw(      a0, -20, a1)
+  RV32OP_sw(      a0, -16, a1)
+  RV32OP_sw(      a0, -12, a1)
+  RV32OP_sw(      a0, -8, a1)
+  RV32OP_sw(      a0, -4, a1)
+  RV32OP_sw(      a0, 0, a1)
+  RV32OP_addi(    a1, a1, 80)
+  RV32OP_bne(     a1, a2, LBB0_1)
+  RV32OP_ret()
+main:
+  RV32OP_addi(    sp, sp, -16)
+  RV32OP_sw(      ra, 12, sp)
+  RV32OP_li(      a1, 39)
+  RV32OP_li(      a0, 0)
+  RV32OP_call(    clearscreen_char_char)
+  RV32OP_li(      a0, 114)
+  RV32OP_sw(      a0, 1024, zero)
+  RV32OP_li(      a0, 97)
+  RV32OP_sw(      a0, 1028, zero)
+  RV32OP_li(      a1, 103)
+  RV32OP_sw(      a1, 1032, zero)
+  RV32OP_li(      a1, 117)
+  RV32OP_sw(      a1, 1036, zero)
+  RV32OP_li(      a1, 108)
+  RV32OP_sw(      a1, 1040, zero)
+  RV32OP_li(      a2, 98)
+  RV32OP_sw(      a2, 1044, zero)
+  RV32OP_sw(      a0, 1048, zero)
+  RV32OP_sw(      a1, 1052, zero)
+  RV32OP_sw(      a0, 1056, zero)
+  RV32OP_li(      a0, 106)
+  RV32OP_sw(      a0, 1060, zero)
+  RV32OP_li(      a0, 105)
+  RV32OP_sw(      a0, 1064, zero)
+  RV32OP_sw(      zero, 1068, zero)
+  RV32OP_li(      a0, 0)
+  RV32OP_lw(      ra, 12, sp)
+  RV32OP_addi(    sp, sp, 16)
+  RV32OP_ret()
+
+/*
+Compiled on https://godbolt.org/ with "-march=rv32im -O3" using "RISC-V rv32gc clang 17.0.1" 
+
+#define MMIO32(addr)        (*(volatile int *)(addr))
+#define MEM_VGA_START       (0x0400)
+#define MEM_JOYBUTTON       (0x05FF)
+
+static void updatescreen(int x, int y, char c, char color) {
+    MMIO32(MEM_VGA_START + (y * 20 + x) * 4) = (color << 8) | c;
+}
+
+void clearscreen(char c, char color) {
+    for(int y = 0; y < 15; y++) {
+        for(int x = 0; x < 20; x++) {
+            updatescreen(x, y, c, color);
+        }
+    }
+}
+
+int main() {
+    clearscreen(0, 0b100111);
+
+    char name[] = "ragulbalaji";
+
+    for (int i = 0; i < sizeof(name) / sizeof(char); i++) {
+        updatescreen(i, 0, name[i], 0);
+    }
+}
+*/
+
+// MEMORY MAP
+.=0x0400 // MEM_VGA_START
+.=0x05FF // MEM_JOYBUTTON
+.=STACK_TOP // STACK TOP
