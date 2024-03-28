@@ -7,14 +7,20 @@
 // RV32IM -> BETA MACROS
 // reference https://www.cse.cuhk.edu.hk/~byu/CENG3420/2023Spring/doc/RV32-reference-1.pdf
 // reference https://msyksphinz-self.github.io/riscv-isadoc/html/rvi.html
+// reference https://en.wikichip.org/wiki/risc-v/registers
 STACK_TOP = 0x7FFF
 zero = r31 // always zero reg
-rtmp = r26 // my temp reg for cmps
-ra = lp    // retaddr for rv32 is lp for beta
-a0 = r0
-a1 = r1
-a2 = r2
-a3 = r3
+rtmp = r30 // my temp reg for cmps
+ra = r1
+sp = r2
+s0 = r8
+fp = r8
+a0 = r10
+a1 = r11
+a2 = r12
+a3 = r13
+a4 = r14
+a5 = r15
 
 .macro RV32OP_li(rd, imm)            CMOVE(imm, rd)
 .macro RV32OP_sw(rs2, imm, rs1)      ST(rs2, imm, rs1)
@@ -24,13 +30,17 @@ a3 = r3
 .macro RV32OP_ret()                  RTN()
 .macro RV32OP_slli(rd, rs1, shamt)   SHLC(rs1, shamt, rd)
 .macro RV32OP_or(rd, rs1, rs2)       OR(rs1, rs2, rd)
-.macro RV32OP_call(label)            CALL(label)
+.macro RV32OP_call(offset)           CALL(offset)
 .macro RV32OP_lw(rd, offset, rs1)    LD(rs1, offset, rd)
 .macro RV32OP_xor(rd, rs1, rs2)      XOR(rs1, rs2, rd)
 .macro RV32OP_srai(rd, rs1, shamt)   SRAC(rs1, shamt, rd)
+.macro RV32OP_srli(rd, rs1, shamt)   SHRC(rs1, shamt, rd)
 .macro RV32OP_and(rd, rs1, rs2)      AND(rs1, rs2, rd)
 .macro RV32OP_andi(rd, rs1, imm)     ANDC(rs1, imm, rd)
-.macro RV32OP_j(label)               BR(label)
+.macro RV32OP_j(offset)              BR(offset)
+.macro RV32OP_bnez(rs1, offset)      BNE(rs1, offset)
+.macro RV32OP_mul(rd, rs1, rs2)      MUL(rs1, rs2, rd)
+.macro RV32OP_add(rd, rs1, rs2)      ADD(rs1, rs2, rd)
 
 
 // RV32IM PROGRAM STARTS HERE
@@ -74,9 +84,12 @@ LBB0_1:
 main:
   RV32OP_addi(    sp, sp, -16)
   RV32OP_sw(      ra, 12, sp)
+  RV32OP_sw(      s0, 8, sp)
+  RV32OP_lui(     a0, 16)
+  RV32OP_addi(    s0, a0, -256)
   RV32OP_li(      a1, 39)
   RV32OP_li(      a0, 0)
-  RV32OP_call(    clearscreen_char_char)
+//   RV32OP_call(    clearscreen_char_char)
   RV32OP_li(      a0, 114)
   RV32OP_sw(      a0, 1024, zero)
   RV32OP_li(      a0, 97)
@@ -97,10 +110,9 @@ main:
   RV32OP_li(      a0, 105)
   RV32OP_sw(      a0, 1064, zero)
   RV32OP_sw(      zero, 1068, zero)
-  RV32OP_lui(     a0, 74565)
-  RV32OP_addi(    a1, a0, 1656)
-  RV32OP_lui(     a0, 16)
-  RV32OP_addi(    a0, a0, -256)
+  RV32OP_li(      a0, 64)
+  RV32OP_lui(     a1, 74565)
+  RV32OP_addi(    a1, a1, 1656)
 LBB1_1:
   RV32OP_slli(    a2, a1, 7)
   RV32OP_xor(     a1, a2, a1)
@@ -108,11 +120,33 @@ LBB1_1:
   RV32OP_xor(     a2, a2, a1)
   RV32OP_slli(    a1, a2, 8)
   RV32OP_xor(     a1, a1, a2)
-  RV32OP_and(     a3, a1, a0)
+  RV32OP_and(     a3, a1, s0)
   RV32OP_andi(    a2, a2, 255)
   RV32OP_or(      a2, a3, a2)
+  RV32OP_addi(    a0, a0, -1)
   RV32OP_sw(      a2, 1024, zero)
-  RV32OP_j(       LBB1_1)
+  RV32OP_bnez(    a0, LBB1_1)
+  RV32OP_lui(     a0, 23968)
+  RV32OP_addi(    a2, a0, -1769)
+  RV32OP_addi(    a0, s0, 255)
+  RV32OP_li(      a1, 20)
+LBB1_3:
+  RV32OP_slli(    a3, a2, 7)
+  RV32OP_xor(     a2, a3, a2)
+  RV32OP_srai(    a3, a2, 9)
+  RV32OP_xor(     a3, a3, a2)
+  RV32OP_slli(    a2, a3, 8)
+  RV32OP_xor(     a2, a2, a3)
+  RV32OP_andi(    a4, a3, 15)
+  RV32OP_slli(    a3, a3, 25)
+  RV32OP_srli(    a3, a3, 29)
+  RV32OP_srli(    a5, a2, 8)
+  RV32OP_and(     a5, a5, a0)
+  RV32OP_mul(     a3, a3, a1)
+  RV32OP_add(     a3, a3, a4)
+  RV32OP_slli(    a3, a3, 2)
+  RV32OP_sw(      a5, 1024, a3)
+  RV32OP_j(       LBB1_3)
 
 /*
 Compiled on https://godbolt.org/ with "-march=rv32im -O3" using "RISC-V rv32gc clang 17.0.1" 
@@ -150,11 +184,20 @@ int main() {
     }
 
     int rand = 0x12345678;
-    while (1==1) {
+    for (int i = 0; i < 64; i++) {
         rand = xorshift32(rand);
         char c = rand & 0xFF;
         char col = (rand >> 8) & 0xFF;
         updatescreen(0, 0, c, col);
+    }
+
+    while (1==1) {
+        rand = xorshift32(rand);
+        int x = rand & 0b1111;
+        int y = (rand >> 4) & 0b111;
+        char c = (rand >> 8) & 0xFF;
+        char col = (rand >> 16) & 0xFF;
+        updatescreen(x, y, c, col);
     }
 }
 */
