@@ -89,7 +89,7 @@ main:
   RV32OP_addi(    s0, a0, -256)
   RV32OP_li(      a1, 39)
   RV32OP_li(      a0, 0)
-//   RV32OP_call(    clearscreen_char_char)
+  RV32OP_call(    clearscreen_char_char)
   RV32OP_li(      a0, 114)
   RV32OP_sw(      a0, 1024, zero)
   RV32OP_li(      a0, 97)
