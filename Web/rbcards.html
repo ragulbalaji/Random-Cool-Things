@@ -1,0 +1,362 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>rb16k roms</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+        />
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+            body {
+                border: 0;
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <section class="hero">
+            <div class="hero-body">
+                <nav class="level">
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Total Data</p>
+                            <p class="title" id="lbl_statstotal">-</p>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <!-- <p class="heading">Likes</p> -->
+                            <p class="title">Image ROMs</p>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Data to Embed</p>
+                            <p class="title" id="lbl_statsembed">-</p>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </section>
+        <br />
+        <div class="container">
+            <div class="columns has-text-centered">
+                <div class="column">
+                    <canvas id="cardview">
+                        Your browser does not support the HTML5 canvas tag.
+                    </canvas>
+                </div>
+                <div class="column">
+                    <div class="field has-addons">
+                        <p class="control">
+                            <a class="button is-static">Name</a>
+                        </p>
+                        <p class="control is-expanded">
+                            <input
+                                id="txt_cardname"
+                                class="input"
+                                type="text"
+                                value="Data Card v1"
+                                placeholder="Data Card v1"
+                            />
+                        </p>
+                    </div>
+
+                    <div class="field has-addons">
+                        <p class="control">
+                            <a class="button is-static">Author</a>
+                        </p>
+                        <p class="control is-expanded">
+                            <input
+                                id="txt_cardauthor"
+                                class="input"
+                                type="text"
+                                value="ragulbalaji"
+                                placeholder="ragulbalaji"
+                            />
+                        </p>
+                    </div>
+
+                    <div class="field has-addons">
+                        <p class="control">
+                            <a class="button is-static">Desc.</a>
+                        </p>
+                        <p class="control is-expanded">
+                            <input
+                                id="txt_carddesc"
+                                class="input"
+                                type="text"
+                                value="Simple format|for data storage"
+                                placeholder="Simple format|for data storage"
+                            />
+                        </p>
+                    </div>
+
+                    <div class="field">
+                        <textarea
+                            id="txt_carddata"
+                            class="textarea is-link"
+                            placeholder="Data to embed in the card"
+                            rows="8"
+                        ></textarea>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input
+                                    id="txt_imgcat"
+                                    class="input"
+                                    type="text"
+                                    placeholder="Image Keywords"
+                                />
+                            </div>
+                            <div class="control">
+                                <button
+                                    id="btn_getRndImg"
+                                    class="button is-link"
+                                >
+                                    Random Image
+                                </button>
+                            </div>
+                        </div>
+                        <p class="control">
+                            <button id="btn_saveCard" class="button is-success">
+                                Save Card
+                            </button>
+                        </p>
+                        <p class="control">
+                            <button id="btn_loadCard" class="button is-danger">
+                                Load Card
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <img
+        id="randomImg"
+        src="data:image/png;base64,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"
+        hidden
+    />
+    <script>
+        const randomImgURL = "https://source.unsplash.com/random/512x512";
+        const randomImg = document.getElementById("randomImg");
+        const btn_getRndImg = document.getElementById("btn_getRndImg");
+        const txt_imgcat = document.getElementById("txt_imgcat");
+
+        btn_getRndImg.onclick = () => {
+            randomImg.src =
+                randomImgURL +
+                `?${txt_imgcat.value.length > 0 ? txt_imgcat.value + "&" : ""}t=` +
+                Date.now();
+            randomImg.crossOrigin = "Anonymous";
+            btn_getRndImg.classList.add("is-loading");
+            randomImg.onload = () => {
+                makeCard();
+                btn_getRndImg.classList.remove("is-loading");
+            };
+        };
+
+        const cardview = document.getElementById("cardview");
+        const ctx = cardview.getContext("2d");
+
+        const txt_cardname = document.getElementById("txt_cardname");
+        const txt_cardauthor = document.getElementById("txt_cardauthor");
+        const txt_carddesc = document.getElementById("txt_carddesc");
+        const txt_carddata = document.getElementById("txt_carddata");
+        const lbl_statstotal = document.getElementById("lbl_statstotal");
+        const lbl_statsembed = document.getElementById("lbl_statsembed");
+
+        txt_cardname.onkeyup = makeCard;
+        txt_cardauthor.onkeyup = makeCard;
+        txt_carddesc.onkeyup = makeCard;
+        txt_carddata.onkeyup = makeCard;
+
+        const btn_saveCard = document.getElementById("btn_saveCard");
+        const btn_loadCard = document.getElementById("btn_loadCard");
+
+        function makeCard() {
+            CARD_CSS_SCALE = 4;
+            CARD_DATA_BLOCK_WIDTH = 128;
+            CARD_DATA_BLOCK_HEIGHT = 128;
+            CARD_HEADER = 48;
+            CARD_HEADER_TRIANGLE = 8;
+            CARD_FOOTER = 16;
+            CARD_MARGIN_SIDES = 6;
+            CARD_WIDTH = CARD_DATA_BLOCK_WIDTH + CARD_MARGIN_SIDES * 2;
+            CARD_HEIGHT = CARD_DATA_BLOCK_HEIGHT + CARD_HEADER + CARD_FOOTER;
+            CARD_BASE_COLOR = "#1D2B53";
+
+            cardview.width = CARD_WIDTH;
+            cardview.height = CARD_HEIGHT;
+            cardview.style.width = `${CARD_WIDTH * CARD_CSS_SCALE}px`;
+            cardview.style.height = `${CARD_HEIGHT * CARD_CSS_SCALE}px`;
+
+            // Set Pixelated Rendering
+            ctx.imageSmoothingEnabled = false;
+            cardview.style.imageRendering = "pixelated";
+            cardview.style.fontSmooth = "never";
+            cardview.style.webkitFontSmoothing = "none";
+
+            // Draw Base Card
+            ctx.fillStyle = CARD_BASE_COLOR;
+            ctx.fillRect(0, 0, CARD_WIDTH, CARD_HEIGHT);
+
+            // Corner Triangle Top Right Golden
+            ctx.fillStyle = "#FFA300";
+            ctx.beginPath();
+            ctx.moveTo(CARD_WIDTH - 1, 1);
+            ctx.lineTo(CARD_WIDTH - CARD_HEADER_TRIANGLE, 1);
+            ctx.lineTo(CARD_WIDTH - 1, CARD_HEADER_TRIANGLE);
+            ctx.fill();
+
+            // Draw Data Block
+            ctx.fillStyle = "#7E2553";
+            ctx.fillRect(
+                CARD_MARGIN_SIDES - 1,
+                CARD_HEADER - 1,
+                CARD_DATA_BLOCK_WIDTH + 2,
+                CARD_DATA_BLOCK_HEIGHT + 2,
+            );
+
+            // Draw Random Image
+            ctx.drawImage(
+                randomImg,
+                CARD_MARGIN_SIDES,
+                CARD_HEADER,
+                CARD_DATA_BLOCK_WIDTH,
+                CARD_DATA_BLOCK_HEIGHT,
+            );
+
+            // Footer Text
+            ctx.fillStyle = "#FFA300";
+            ctx.font = "8px 'Press Start 2P'";
+            ctx.textAlign = "center";
+            ctx.fillText("rb16k ROM", CARD_WIDTH / 2, CARD_HEIGHT - 3);
+
+            // Card Details
+            ctx.fillText(txt_cardname.value, CARD_WIDTH / 2, 11);
+            ctx.fillText(txt_cardauthor.value, CARD_WIDTH / 2, 22);
+            const desclines = txt_carddesc.value.split("|");
+            ctx.fillStyle = "#5F574F";
+            ctx.fillText(desclines[0], CARD_WIDTH / 2, 33);
+            if (desclines.length > 1)
+                ctx.fillText(desclines[1], CARD_WIDTH / 2, 44);
+
+            // Get Image Data to embed steganography
+            const imageData = ctx.getImageData(0, 0, CARD_WIDTH, CARD_HEIGHT);
+            const data = imageData.data;
+
+            const CARD_EMBED_DATA = {
+                vendor: "ragulbalaji",
+                card: "rb16k",
+                name: txt_cardname.value,
+                author: txt_cardauthor.value,
+                desc: txt_carddesc.value,
+                data: txt_carddata.value,
+            };
+
+            const CARD_EMBED_DATA_JSON = JSON.stringify(CARD_EMBED_DATA);
+            const CARD_EMBED_DATA_BYTES = new TextEncoder().encode(
+                CARD_EMBED_DATA_JSON,
+            );
+
+            lbl_statsembed.innerText = `${new TextEncoder().encode(txt_carddata.value).length} B`;
+            lbl_statstotal.innerText = `${CARD_EMBED_DATA_BYTES.length} B`;
+
+            if (CARD_EMBED_DATA_BYTES.length > CARD_WIDTH * CARD_HEIGHT) {
+                alert("Data exceeds card capacity");
+                return;
+            }
+
+            for (let i = 0; i < CARD_WIDTH * CARD_HEIGHT * 4; i++) {
+                data[i] &= 0b11111000;
+            }
+
+            for (let i = 0; i < CARD_EMBED_DATA_BYTES.length; i++) {
+                const px = i * 4;
+                data[px + 0] |= (CARD_EMBED_DATA_BYTES[i] & 0b11100000) >> 5;
+                data[px + 1] |= (CARD_EMBED_DATA_BYTES[i] & 0b00011000) >> 3;
+                data[px + 2] |= (CARD_EMBED_DATA_BYTES[i] & 0b00000111) >> 0;
+                data[px + 3] = 255; // Pre-multiplied alpha fucks us up... so keep at 255.
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        btn_saveCard.onclick = saveCard;
+        function saveCard() {
+            const a = document.createElement("a");
+            a.href = cardview.toDataURL("image/png", 1.0);
+            a.download = `${txt_cardname.value.replaceAll(" ", "")}.rb16k.png`;
+            a.click();
+        }
+
+        btn_loadCard.onclick = loadCard;
+        function loadCard() {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/png";
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.drawImage(img, 0, 0);
+                        extractDataAfterLoad();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+
+        function extractDataAfterLoad() {
+            const imageData = ctx.getImageData(0, 0, CARD_WIDTH, CARD_HEIGHT);
+            const data = imageData.data;
+            let CARD_EMBED_DATA_BYTES = new Uint8Array(data.length / 4);
+            let CARD_EMBED_DATA_BYTES_LENGTH = 0;
+            CARD_EMBED_DATA_BYTES.fill(0);
+            for (let i = 0; i < CARD_EMBED_DATA_BYTES.length; i++) {
+                const px = i * 4;
+                CARD_EMBED_DATA_BYTES[i] =
+                    ((data[px + 0] & 0b00000111) << 5) |
+                    ((data[px + 1] & 0b00000011) << 3) |
+                    ((data[px + 2] & 0b00000111) << 0);
+
+                if (CARD_EMBED_DATA_BYTES[i] == 0) break;
+                CARD_EMBED_DATA_BYTES_LENGTH++;
+            }
+
+            CARD_EMBED_DATA_BYTES = CARD_EMBED_DATA_BYTES.slice(
+                0,
+                CARD_EMBED_DATA_BYTES_LENGTH,
+            );
+
+            const CARD_EMBED_DATA_JSON = new TextDecoder().decode(
+                CARD_EMBED_DATA_BYTES,
+            );
+
+            try {
+                const CARD_EMBED_DATA = JSON.parse(CARD_EMBED_DATA_JSON);
+                console.log(CARD_EMBED_DATA);
+                txt_cardname.value = CARD_EMBED_DATA.name;
+                txt_cardauthor.value = CARD_EMBED_DATA.author;
+                txt_carddesc.value = CARD_EMBED_DATA.desc;
+                txt_carddata.value = CARD_EMBED_DATA.data;
+            } catch (e) {
+                alert("Invalid card data");
+            }
+        }
+
+        makeCard();
+    </script>
+</html>
